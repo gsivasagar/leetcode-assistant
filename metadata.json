@@ -1,0 +1,6 @@
+{
+  "name": "LeetCode AI Assistant",
+  "description": "An AI-powered assistant to help you understand and solve LeetCode problems by providing hints, explaining the thought process, and outlining solution approaches. Paste a problem description to get started.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

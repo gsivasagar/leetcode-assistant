@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode AI Assistant",
+  "description": "An AI coach for LeetCode problems.",
+  "version": "1.0",
+  "permissions": ["storage"],
+  "host_permissions": ["https://*/*"],
+  "action": {
+    "default_popup": "dist/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/index.js", "assets/index.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
