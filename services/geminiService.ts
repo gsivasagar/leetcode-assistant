@@ -2,11 +2,21 @@ import { GoogleGenAI, Chat, Type, GenerateContentResponse } from "@google/genai"
 
 let ai: GoogleGenAI | null = null;
 
-export function initializeAiService(apiKey: string) {
+export async function initializeAiService(apiKey: string) {
     if (!apiKey) {
         throw new Error("API key is required to initialize the AI service.");
     }
-    ai = new GoogleGenAI({ apiKey });
+
+    const testAi = new GoogleGenAI({ apiKey });
+
+    // Perform a lightweight validation request to ensure the key is active
+    try {
+        const testChat = testAi.chats.create({ model: "gemini-2.5-flash" });
+        await testChat.sendMessage({ message: "ping" }); // Simple ping
+        ai = testAi; // Only save the instance if it works
+    } catch (e: any) {
+        throw new Error("The API key provided is invalid or has expired.");
+    }
 }
 
 const SYSTEM_INSTRUCTION = `You are an expert LeetCode coach and world-class software engineer. Your goal is to help users solve coding problems by guiding them.
@@ -25,8 +35,8 @@ const analysisSchema = {
     properties: {
         hints: {
             type: Type.ARRAY,
-            items: { 
-                type: Type.STRING 
+            items: {
+                type: Type.STRING
             },
             description: 'An array of 3 concise, high-level hints to nudge the user in the right direction. Each hint should be progressively more revealing.'
         },
@@ -76,7 +86,7 @@ export function getInitialAnalysis(chat: Chat, problem: string, language: string
     });
 }
 
-export async function getCodeInNewLanguage(chat: Chat, problem: string, algorithm: string, language: string): Promise<{code: string}> {
+export async function getCodeInNewLanguage(chat: Chat, problem: string, algorithm: string, language: string): Promise<{ code: string }> {
     const prompt = `
         Original Problem:
         ${problem}
@@ -86,7 +96,7 @@ export async function getCodeInNewLanguage(chat: Chat, problem: string, algorith
 
         Based on the problem and algorithm above, provide a complete, runnable code solution in the ${language} language.
     `;
-    
+
     const response: GenerateContentResponse = await chat.sendMessage({
         message: prompt,
         config: {
@@ -100,7 +110,7 @@ export async function getCodeInNewLanguage(chat: Chat, problem: string, algorith
 }
 
 
-export function sendMessage(chat: Chat, message: string, language:string) {
+export function sendMessage(chat: Chat, message: string, language: string) {
     const prompt = `My preferred language is ${language}. Please consider this for any code or pseudocode.\n\nMy follow-up request:\n${message}`;
     return chat.sendMessageStream({ message: prompt });
 };

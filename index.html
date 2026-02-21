@@ -7,13 +7,20 @@
     <title>LeetCode AI Assistant</title>
     <link rel="stylesheet" href="/index.css" />
 
-    <!-- ✅ Force fixed popup size -->
+    <!-- Context-aware sizing -->
+    <script>
+      if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
+        document.documentElement.classList.add('is-extension');
+      }
+    </script>
     <style>
       html, body {
-        width: 500px;
-        height: 600px;
         margin: 0;
         padding: 0;
+      }
+      html.is-extension, html.is-extension body {
+        width: 500px;
+        height: 600px;
         overflow: hidden;
       }
       #root {
